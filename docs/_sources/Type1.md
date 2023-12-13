@@ -1,4 +1,4 @@
-# Classifying Type 1 soundings
+# Type 1 soundings
 
 Type 1 soundings refer to those with a warm layer near the surface. The falling hydrometeor would melt partially or completely depending on the available melting energy. As shown in Figure 3, the snow probability decreases as the melting energy increases, confirming that the ME is a good predictor for phase classification.
 

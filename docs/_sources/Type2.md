@@ -36,6 +36,6 @@ Figure 8 (a) An enlarged version of Figure 7, with the rain/snow examples marked
 
 We applied fitting to the snow probability contours utilizing a function in the form of $S_2=Tw+5.38tanh(c*y+d)+e$ and derived a set of coefficients for different snow probabilities (not shown here, would be available after the paper is published). For future applications, readers can select various thresholds for classifying rain and snow ranging from 30% to 80% in an interval of 10%. We evaluated the performances of adopting thresholds of 50% and 70%, as shown in the table below. When using the 50% threshold, although the POD decreased by 0.28, the FAR significantly reduced by more than 0.5, indicating stricter snow predictions. Similar improvements are observed for the 70% threshold (drier snow).
 
-![type2_table](/figures/type2_table.jpg)
+![type2_table](type2_table.jpg)
 
 The significant improvements compared to the Probsnow method show that the atmospheric energy is capable of representing the vertical temperature and moisture profile properly. The better phase classification for Type 2 soundings would contribute significantly to the overall prediction skills.
