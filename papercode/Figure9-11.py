@@ -208,7 +208,6 @@ def print_metrics(pre_rain, pre_snow, printflag):
     return metrics
 
 #%%
-datapath = '/r1/sshi/sounding_phase/data/NA/revision_t_tw_ti/'
 datapath = '../data/'
 figpath = '../figure/'
 threshold = 0.5
@@ -266,9 +265,9 @@ bias_loc = bias_loc[~bias_loc.index.duplicated()]
     
 bias_energy['lon'] = bias_loc['LON']
 bias_energy['lat'] = bias_loc['LAT']
-bias_energy.to_csv('../data/bias_energy_'+str(threshold*100)+'.txt')
+# bias_energy.to_csv('../data/bias_energy_'+str(threshold*100)+'.txt')
   
-scores.to_csv('../data/scores_energy_'+str(threshold*100)+'.txt')
+# scores.to_csv('../data/scores_energy_'+str(threshold*100)+'.txt')
 
 #%%
 # bias_energy = pd.read_csv('../data/bias_energy.txt', dtype={'ID':str}, index_col=0)
@@ -286,7 +285,7 @@ dlon, dlat = 30, 15
 proj = ccrs.PlateCarree(central_longitude=0)
 
 # set colormap
-rgb = pd.read_csv( '../data/diff_16colors.txt', 
+rgb = pd.read_csv( '../data/colormap/diff_16colors.txt', 
                   delim_whitespace=True, header=None).values/255
 rgb = rgb[1:-1] #14 colors
 cmap = colors.LinearSegmentedColormap.from_list('mymap', rgb[1:-1], len(rgb)-2)
@@ -368,8 +367,8 @@ plt.savefig(figpath+'Figure9_'+str(int(threshold*100))+'.pdf', format='pdf', bbo
 '''
 Figure 10
 '''
-scores= pd.read_csv(datapath+'/scores_energy_'+str(threshold*100)+'.txt',
-                    index_col=0)
+# scores= pd.read_csv(datapath+'/scores_energy_'+str(threshold*100)+'.txt',
+#                     index_col=0)
 
 stations = pd.read_csv(datapath+'NCEP_IGRA_collocated_stations_cleaned.txt')
 stations.set_index('NCEP_ID', inplace=True)
@@ -434,7 +433,7 @@ plt.savefig(figpath+'Figure10_'+str(int(threshold*100))+'.pdf', format='pdf', bb
 #%%
 # --------------
 
-scores_probsnow = pd.read_csv(datapath+str(int(threshold*100))+'_TwProbsnow_score_map.txt',
+scores_probsnow = pd.read_csv(datapath+'Figure11/'+str(int(threshold*100))+'_TwProbsnow_score_map.txt',
                               index_col=0)
 scores_probsnow = scores_probsnow.loc[nums.ndata>=10]
 
@@ -451,7 +450,7 @@ for var in strings:
 dfcmap = pd.read_csv(r'/Users/ssynj/Dropbox/Research/MyColormap/NCV_bluered.txt', delim_whitespace=True, header=None)
 
 # dfcmap = pd.read_csv('diff_16colors.txt', header=None, dtype=int, delim_whitespace=True).values/255
-dfcmap = pd.read_csv(datapath+'/darkbluedarkred.txt', header=None).values/255
+dfcmap = pd.read_csv(datapath+'/colormap/darkbluedarkred.txt', header=None).values/255
 cmap = colors.ListedColormap(dfcmap[1:-1])
 cmap.set_under(dfcmap[0, :])
 cmap.set_over(dfcmap[-1, :])

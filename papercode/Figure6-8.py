@@ -15,11 +15,40 @@ import matplotlib.pyplot as plt
 from skimage import measure
 from scipy.optimize import curve_fit
 
-from function.conp import conp_2d
-#from function.evaluate import print_metrics, evaluate_probsnow
-from function.watervapor import td2rh
+from watervapor import td2rh
 
-
+def conp_2d(rain, snow, xvar, yvar, params):
+    '''
+    on the plot, column is x axis, row is y axis
+    
+    Input:
+        rain, snow: DataFrames
+        xvar, yvar: str
+        params:  xmin, xmax, xbinsize, ymin, ymax, ybinsize
+    Output:
+        conp, num_rain, num_snow
+    '''
+    xmin, xmax, xbinsize, ymin, ymax, ybinsize = params
+    
+    # column is x axis, row is y axis on the plot
+    num_rain = pd.DataFrame(data=0, 
+                            index=np.arange(ymin, ymax, ybinsize)+ybinsize/2, 
+                            columns=np.arange(xmin, xmax, xbinsize)+xbinsize/2)
+    num_snow = pd.DataFrame(data=0, 
+                            index=np.arange(ymin, ymax, ybinsize)+ybinsize/2, 
+                            columns=np.arange(xmin, xmax, xbinsize)+xbinsize/2)
+    for row in num_rain.index:
+        for col in num_rain.columns:
+            num_rain.loc[row, col] += ((rain[yvar]>row-ybinsize/2) & 
+                                       (rain[yvar]<=row+ybinsize/2) & 
+                                       (rain[xvar]>col-xbinsize/2) & 
+                                       (rain[xvar]<=col+xbinsize/2)).sum()
+            num_snow.loc[row, col] += ((snow[yvar]>row-ybinsize/2) & 
+                                       (snow[yvar]<=row+ybinsize/2) &
+                                       (snow[xvar]>col-xbinsize/2) & 
+                                       (snow[xvar]<=col+xbinsize/2)).sum()
+    conp = num_snow/(num_snow+num_rain)
+    return conp, num_rain, num_snow
 
 def LDA_boundary_line(x_r, x_s):
     '''
@@ -107,9 +136,6 @@ blue = np.array([14, 126, 191])/255
 red = np.array([235, 57, 25])/255
  
 
-datapath = './data/NA/revision_t_tw_ti/'
-figpath = './04-Temp_Threshold/nimbus/revision/figure/'
-
 datapath = '../data/'
 figpath = '../figure/'
 PA = 'PA_ti'
@@ -166,23 +192,6 @@ params = [-8, 8, 2,
 conp, num_rain, num_snow = conp_2d(rain, snow, 'ti', 'net', params)
 conp1 = conp.mask(num_rain+num_snow<10)
 
-# =============================================================================
-# params = {'xlim': [-9, 5],
-#           'ylim': [-7, 1],
-#           'xlabel': 'ln('+str(npa)+'TiME/'+str(nna)+'TiRE)',
-#       'ylabel': 'Ti'}
-# fig, ax = plot_type2_contour(conp, params)
-# #fig.savefig(figpath+'type2_random_contour', dpi=300, bbox_inches='tight')
-# fig, ax = plot_type2_contour(conp1, params)
-# #fig.savefig(figpath+'type2_random_contour_cleaned', dpi=300, bbox_inches='tight')
-# 
-# =============================================================================
-
-# params = {'xlim': [-10, 12],
-#           'ylim': [-7, 3],
-#           'xlabel': 'ln('+str(npa)+'TwME/'+str(nna)+'TwRE)',
-#           'ylabel': 'Lowest Tw'}
-# plot_type2_scatter(rain, snow, 'net', 'lowest_ti', params)
 
 # ----------------
 def running_conp(rain, snow, xvar, yvar, params):
@@ -262,7 +271,52 @@ plot_type2_contour(LUT, params)
 
 ''' 
 fit with '''
-from function.fitting import get_contour_values
+def get_contour_values(df):
+    '''
+    cn is the returned contour 
+    '''
+    cn = plt.contour(df.index, df.columns, df.T, levels=np.arange(0, 1.1, 0.1))
+    plt.close()
+    contours = []
+    idx = 0
+    # match contour value with corresponding coordinates
+    for cc, vl in zip(cn.collections, cn.levels):
+        for pp in cc.get_paths():
+            paths = {}
+            paths['id'] = idx
+            paths["value"] = float(vl)
+            
+            v = pp.vertices
+            x = v[:, 0]
+            y = v[:, 1]
+            
+            paths["x"] = x
+            paths["y"] = y
+            contours.append(paths)
+            idx += 1
+            
+    # merge arrays with the same contour value
+    xs, ys = {}, {}
+    for value in cn.levels:
+        x, y = [], []
+        for contour in contours:
+            if contour['value'] == float(value):
+                x+=list(contour['x'])
+                y+=list(contour['y'])
+        
+        xy = np.array([x, y])
+        xy = xy[:, xy[0,:].argsort()]
+        
+        key = np.round(value, decimals=1)
+        if np.size(xy)>0:  
+            xy = np.unique(xy, axis=1)
+        
+            xs[key] = xy[0, :]
+            ys[key] = xy[1, :]
+        else:
+            xs[key], ys[key] = [], []
+    return xs, ys
+
 from sklearn.metrics import r2_score
 
 [xs, ys] = get_contour_values(LUT)
@@ -333,7 +387,7 @@ for value in np.arange(0.3, 0.81, 0.1):
 
 '''Evaluate'''
 
-from function.evaluate import evaluate_model, evaluate_probsnow
+from evaluate import evaluate_model, evaluate_probsnow
 test = type2_ti_ev[~type2_ti_ev.t.isna() & 
                 ~type2_ti_ev.td.isna() & 
                 ~type2_ti_ev.p.isna() & 

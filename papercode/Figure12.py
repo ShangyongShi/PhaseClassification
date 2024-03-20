@@ -60,8 +60,8 @@ def plot_basemap(ax, img_extent, dlon, dlat):
     gl.xlocator = mticker.FixedLocator(xticks)
     gl.ylocator = mticker.FixedLocator(yticks)  
 #%%    
-file1 = '../data/5by5/5by5_avg_sf_prob_2008.txt'
-file2 = '../data/5by5/5by5_avg_sf_energy_2008.txt'
+file1 = '../data/Figure12/5by5_avg_sf_prob_2008.txt'
+file2 = '../data/Figure12/5by5_avg_sf_energy_2008.txt'
 energydat = np.loadtxt(file1, delimiter=',')
 probdat = np.loadtxt(file2, delimiter=',')
 
@@ -112,14 +112,14 @@ per = per.mask(ocean).values
 
 
 # set colormap
-wbgyr = pd.read_csv('../data/whiterainbow.txt',
+wbgyr = pd.read_csv('../data/colormap/whiterainbow.txt',
                     header=None, delim_whitespace=True)
 wbgyr /= 255
 wbgyr = wbgyr.values
 cmap = colors.LinearSegmentedColormap.from_list(
        'mymap', wbgyr, len(wbgyr))
 #  difference colormap
-dfcmap = pd.read_csv('../data/darkbluedarkred.txt', header=None).values/255
+dfcmap = pd.read_csv('../data/colormap/darkbluedarkred.txt', header=None).values/255
 br = colors.ListedColormap(dfcmap[1:-1])
 br.set_under(dfcmap[0, :])
 br.set_over(dfcmap[-1, :])
@@ -174,7 +174,7 @@ fig.savefig(figpath+'Figure12.pdf', format='pdf', bbox_inches='tight')
 
 #%%
 # -----------
-datapath = '../data/5by5/'
+datapath = '../data/Figure12/'
 # =============================================================================
 # def regrid_5by5(n0):
 #     # sum into 5 by 5
@@ -238,4 +238,4 @@ cb1 = plt.colorbar(p1, cax=position1, orientation='vertical', extend='max')
 
 cb1.ax.set_ylabel('fraction (excluding Type 0)')
 ax1.set_title('Fraction of Type 2 Soundings in Snow')
-fig.savefig(figpath+'era5_frac_type2', dpi=1000, bbox_inches='tight')
+fig.savefig(figpath+'FigureS8_era5_frac_type2', dpi=1000, bbox_inches='tight')
