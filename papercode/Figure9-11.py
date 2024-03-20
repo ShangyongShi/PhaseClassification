@@ -212,18 +212,21 @@ datapath = '../data/'
 figpath = '../figure/'
 threshold = 0.5
 
-df = pd.read_csv(datapath + 'final_all_cleaned_data.txt', index_col=0, dtype={'ID':str})
-de1 = pd.read_csv(datapath + 'type1_ti_de.txt', index_col=0, dtype={'ID':str})
-de2 = pd.read_csv(datapath + 'type2_ti_de.txt', index_col=0, dtype={'ID':str})
-df.drop(index=de1.index, inplace=True)
-df.drop(index=de2.index, inplace=True)
+# df = pd.read_csv(datapath + 'final_all_cleaned_data.txt', index_col=0, dtype={'ID':str})
+# de1 = pd.read_csv(datapath + 'type1_ti_de.txt', index_col=0, dtype={'ID':str})
+# de2 = pd.read_csv(datapath + 'type2_ti_de.txt', index_col=0, dtype={'ID':str})
 
-test = df[  ~df.t.isna() & 
-            ~df.td.isna() & 
-            ~df.p.isna() & 
-            ~df.lapse_rate_tw.isna() &
-            ~df.lapse_rate_t.isna() &
-            (df.type_ti>0)]
+# df.drop(index=de1.index, inplace=True)
+# df.drop(index=de2.index, inplace=True)
+
+# test = df[  ~df.t.isna() & 
+#             ~df.td.isna() & 
+#             ~df.p.isna() & 
+#             ~df.lapse_rate_tw.isna() &
+#             ~df.lapse_rate_t.isna() &
+#             (df.type_ti>0)]
+
+test = pd.read_csv(datapath+'Figure9/Figure9_testdata.txt')
 
 IDs = np.sort(test.ID.unique())
 nums = pd.DataFrame(index=IDs, 
