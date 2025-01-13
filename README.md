@@ -1,6 +1,6 @@
 This is the PhaseClassification project.
-More information would be updated here once the paper is published.
+The link to paper: https://onlinelibrary.wiley.com/doi/abs/10.1029/2023JD040030
 
-The documentations can be found at https://shangyongshi.github.io/PhaseClassification/docs/. Now this site is not complete but contains basic information for you to know about what we have done.
+Shi, S., & Liu, G. (2024). Improvements on Phase Classification Using Atmospheric Melting and Refreezing Energy Based on Soundings. Journal of Geophysical Research: Atmospheres, 129(10), e2023JD040030. https://doi.org/10.1029/2023JD040030
 
-my email: sshi2@fsu.edu
+my email: sshi28@jhu.edu
