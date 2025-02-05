@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import os
 import sys
-sys.path.append('C:/Files/Research/04-Temp_Threshold/nimbus/') 
+sys.path.append('../') 
 
 import matplotlib.pyplot as plt
 from function.plot_basemap import *
