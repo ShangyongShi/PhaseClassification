@@ -62,7 +62,7 @@ def lapse_rate(t, p, z, target_height=500, min_dz=250, max_dz=750):
 
 
 
-def cal_lapse_rate_vec(t: np.ndarray, p: np.ndarray, z: np.ndarray,
+def lapse_rate_vec(t: np.ndarray, p: np.ndarray, z: np.ndarray,
                               target_height: float = 500, 
                               min_dz: float = 250, 
                               max_dz: float = 750) -> np.ndarray:

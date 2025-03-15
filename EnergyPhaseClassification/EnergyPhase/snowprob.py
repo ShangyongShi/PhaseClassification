@@ -96,9 +96,9 @@ coefs_type1 = {
         0.7: np.array([0.92178506, -1.31780889]),
         0.8: np.array([0.4477541 , -2.14061253])}
 
-coefs_type2 = {0.3: np.array([  0.11992169,  -0.48402358,  7.40607351]),
-               0.4: np.array([  0.08766819,   0.0641349 , -3.59167715]),
-               0.5: np.array([  0.14446052,   0.63535494, -14.0823996]),
+coefs_type2 = {0.3: np.array([  0.11992169,  -0.48402358,   7.40607351]),
+               0.4: np.array([  0.08766819,   0.0641349 ,  -3.59167715]),
+               0.5: np.array([  0.14446052,   0.63535494,  -14.0823996]),
                0.6: np.array([  0.21317597,   0.69167411, -16.86781474]),
                0.7: np.array([  0.29617753,   0.47365385, -18.36315865]),
                0.8: np.array([  0.39996308,  -0.11066325, -19.82783235])}
@@ -188,7 +188,7 @@ def compute_snowp(snowp, T, ME, RE, TYPE, mask, lut_model):
             thr1, thr2 = thresholds[i], thresholds[i+1]
             T1 = T_vals[thr1]
             T2 = T_vals[thr2]
-            pair_mask = int_mask & (((T1 <= T) & (T < T2)) | ((T2 <= T) & (T < T1)))
+            pair_mask = int_mask & ((T2 <= T) & (T < T1))
             if np.any(pair_mask):
                 denom = T2 - T1
                 ratio = np.zeros_like(T)
@@ -197,21 +197,6 @@ def compute_snowp(snowp, T, ME, RE, TYPE, mask, lut_model):
                 interp_val = thr1 + ratio * (thr2 - thr1)
                 snowp = np.where(pair_mask, interp_val, snowp)
                 
-        # for i in range(len(thresholds) - 1):       
-        #     p1, p2 = thresholds[i], thresholds[i + 1]  # Consecutive probability thresholds
-        #     T1 = type1_exp(ME, *coefs_type1[p1])
-        #     T2 = type1_exp(ME, *coefs_type1[p2])
-        #     T1[T1<1e-6] = 0
-        #     T2[T2<1e-6] = 0
-        #     # Find where Ti falls between T1 and T2
-        #     mask = int_mask & ((T1 <= T) & (T < T2) | (T2 <= T) & (T < T1))
-            
-        #     # Compute interpolation factor
-        #     interfactor = np.where( abs(T1- T2)>1e-6, (T - T1) / (T2 - T1), 0)
-
-        #     # Compute interpolated snowp value
-        #     snowp = np.where(mask, p1 + interfactor * (p2 - p1), snowp)
-    
     return np.clip(snowp, 0, 1)
 
     
